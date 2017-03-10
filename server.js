@@ -8,6 +8,8 @@ var bodyParser = require('body-parser');
 
 var app = express();
 
+var memory = {};
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
@@ -16,14 +18,24 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+var dataMemory = {};
+
 app.get('/set?*', function(req, res) {
-  console.log('received GET /set');
+  var key = Object.keys(req.query)[0];
+  var value = req.query[key];
+  console.log('Setting ' + key + ': ' + value);
+  dataMemory[key] = value;
   res.send();
 });
 
 app.get('/get?*', function(req, res) {
-  console.log('received GET /get');
-  res.send();
+  var key = Object.keys(req.query)[0];
+  var value = dataMemory[key];
+  var responseObj = {};
+  responseObj[key] = value;
+  console.log('Responding with: ', responseObj);
+  res.setHeader('Content-Type', 'application/json');
+  res.send(responseObj);
 });
 
 // catch 404 and forward to error handler
