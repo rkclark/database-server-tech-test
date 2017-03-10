@@ -1,5 +1,8 @@
+'use strict';
+
 var express = require('express');
 var path = require('path');
+var request = require('request');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
 
@@ -13,6 +16,15 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.get('/set?*', function(req, res) {
+  console.log('received GET /set');
+  res.send();
+});
+
+app.get('/get?*', function(req, res) {
+  console.log('received GET /get');
+  res.send();
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
